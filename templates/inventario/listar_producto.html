@@ -1,0 +1,73 @@
+{% extends 'index.html' %}
+
+{% block titulo %}
+  | Listado de Productos
+{% endblock titulo %}
+
+{% block body %}
+<div>
+  <button class="btn btn-primary" type="button" onclick="abrir_modal_creacion('{% url 'inventario:crear_producto' %}')">Crear
+    Producto</button>
+</div>
+  {% if productos %}
+      <div class="card">
+          <div class="card-header">
+              <strong class="card-title">Listado de Productos</strong>
+          </div>
+          <div class="table-stats order-table ov-h">
+              <table class="table">
+                  <thead>
+                      <tr>
+                        <th>Sku</th>
+						            <th>Nombre del Producto</th>
+						            <th>Descripción del Producto</th>
+						            <th>Stock</th>
+						            <th>Precio</th>
+						            <th><center>Opciones</center></th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                    {% for producto in productos %}
+                      <tr>
+                        <td>{{ producto.codigo }}</td>
+						            <td>{{ producto.nombre_producto }}</td>
+						            <td>{{ producto.descripcion_producto }}</td>
+						            <td>{{ producto.stock }}</td>
+						            <td>${{ producto.precio }}</td>
+                        <td>                          
+                          <button onclick="abrir_modal_edicion('{% url 'inventario:editar_producto' producto.codigo %}')" class="btn btn-primary">Editar</button>
+                          <a href="{% url 'inventario:eliminar_producto' producto.codigo %}" class="btn btn-danger">Eliminar</a>
+                        </td>
+                      </tr>
+                    {% endfor %}
+                  </tbody>
+              </table>
+          </div>
+      </div>
+      {% else %}
+        <h1>No existen autores registrados</h1>
+      {% endif %}
+<div class="modal fade" id="creacion" role="dialog">
+
+</div>
+
+<div class="modal fade" id="edicion" role="dialog">
+
+</div>
+
+{% endblock body %}
+{% block extrajs %}
+<script type="text/javascript">
+  var $ = jQuery.noConflict();
+  function abrir_modal_edicion(url) {
+    $('#edicion').load(url, function () {
+      $(this).modal('show');
+    });
+  }
+  function abrir_modal_creacion(url) {
+    $('#creacion').load(url, function () {
+      $(this).modal('show');
+    });
+  }
+</script>
+{% endblock extrajs %}
